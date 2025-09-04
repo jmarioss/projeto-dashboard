@@ -1,3 +1,11 @@
-colunaA,colunaB,colunaC
-dadosA2,dadosB2,dadosC2
-dadosA3,dadosB3,dadosC3
+colunaA,colunaB,colunaC,colunaD,colunaE,colunaF
+dadosA2,dadosB2,dadosC2,01/09/2025,123,455
+dadosA3,dadosB3,dadosC3,02/09/2025,111,266
+dadosA4,dadosB4,dadosC4,03/09/2025,222,777
+dadosA5,dadosB5,dadosC5,04/09/2025,339,88
+dadosA6,dadosB6,dadosC6,05/09/2025,444,99
+dadosA7,dadosB7,dadosC7,06/09/2025,05,1010
+dadosA8,dadosB8,dadosC8,07/09/2025,66,1111
+dadosA9,dadosB9,dadosC9,08/09/2025,777,122
+dadosA10,dadosB10,dadosC10,09/09/2025,88,131
+dadosA11,dadosB11,dadosC11,10/09/2025,355,141
