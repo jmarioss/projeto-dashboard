@@ -13,8 +13,20 @@ def carregar_dados(caminho_arquivo):
             st.error(f"Erro ao carregar o arquivo: {e}")
             return None
 
-df = carregar_dados("data.csv")
+@st.cache_data
+def carregar_arquivo(arquivo):
+        try:
+            df = pd.read_csv(arquivo)
+            return df
+        except Exception as e:
+            st.error(f"Erro ao carregar o arquivo: {e}")
+            return None
 
+#df = carregar_dados("data.csv")
+
+arquivo = st.file_uploader("Carregue seu arquivo CSV", type=["csv"])
+
+df = carregar_arquivo(arquivo)
 
 if df is not None and not df.empty:
     st.subheader("Selecione as colunas para visualizar:")
@@ -26,9 +38,10 @@ if df is not None and not df.empty:
         options=colunas_numericas,
         default=colunas_numericas
     )
-    tipo_grafico = st.selectbox(
+    tipo_grafico = st.multiselect(
         "Selecione o tipo de gráfico:",
-        options=["Linha", "Barra", "Área", "Dispersão", "Todos"]
+        options=["Linha", "Barra", "Área", "Dispersão"],
+        default=["Linha"]
     )
     st.dataframe(df[[col_eixo_x] + colunas_y])
     if colunas_y:
@@ -36,21 +49,22 @@ if df is not None and not df.empty:
         dados_grafico = df[[col_eixo_x] + colunas_y].dropna()
         dados_grafico = dados_grafico.sort_values(by=col_eixo_x)
         dados_grafico = dados_grafico.set_index(col_eixo_x)
-        if tipo_grafico == "Linha" or tipo_grafico == "Todos":
-            st.line_chart(dados_grafico)
-        if tipo_grafico == "Barra" or tipo_grafico == "Todos":
-            st.bar_chart(dados_grafico)
-        if tipo_grafico == "Área" or tipo_grafico == "Todos":
-            st.area_chart(dados_grafico)
-        if tipo_grafico == "Dispersão" or tipo_grafico == "Todos":
-            import altair as alt
-            for col_y in colunas_y:
-                chart = alt.Chart(df).mark_circle().encode(
-                    x=col_eixo_x,
-                    y=col_y,
-                    tooltip=[col_eixo_x, col_y]
-                ).interactive()
-                st.altair_chart(chart, use_container_width=True)
+        for opcao in tipo_grafico:
+            if opcao == "Linha":
+                st.line_chart(dados_grafico)
+            elif opcao == "Barra":
+                st.bar_chart(dados_grafico)
+            elif opcao == "Área":
+                st.area_chart(dados_grafico)
+            elif opcao == "Dispersão":
+                import altair as alt
+                for col_y in colunas_y:
+                    chart = alt.Chart(df).mark_circle().encode(
+                        x=col_eixo_x,
+                        y=col_y,
+                        tooltip=[col_eixo_x, col_y]
+                    ).interactive()
+                    st.altair_chart(chart, use_container_width=True)
     else:
         st.info("Selecione ao menos uma coluna para o eixo Y.")
 else:
